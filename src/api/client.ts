@@ -1,4 +1,5 @@
 import axios, { AxiosError } from 'axios'
+import type { AxiosRequestConfig } from 'axios'
 import { ElMessage } from 'element-plus'
 import type { ApiResponse } from '@/types/api'
 
@@ -24,9 +25,9 @@ function showError(message: string) {
 export async function request<T>(config: {
   url: string
   method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
-  params?: Record<string, unknown>
+  params?: AxiosRequestConfig['params']
   data?: unknown
-  headers?: Record<string, string>
+  headers?: AxiosRequestConfig['headers']
 }): Promise<T> {
   try {
     const response = await client.request<ApiResponse<T>>(config)

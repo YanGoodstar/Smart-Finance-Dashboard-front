@@ -13,11 +13,30 @@ let chart: echarts.ECharts | null = null
 
 const palette = ['#173959', '#b78a4d', '#2f7d5b', '#c94f3c', '#8b5e83', '#4d7298', '#d49a3a']
 
+function normalizeTooltipValue(value: unknown): string | number | undefined {
+  if (typeof value === 'number' || typeof value === 'string') {
+    return value
+  }
+  if (value instanceof Date) {
+    return value.getTime()
+  }
+  return undefined
+}
+
 const option = computed<echarts.EChartsOption>(() => ({
   color: palette,
   tooltip: {
     trigger: 'item',
-    formatter: (params: { name: string; value: number }) => `${params.name}<br/>${formatMoney(params.value)}`,
+    formatter: (params) => {
+      const item = Array.isArray(params) ? params[0] : params
+      let value = normalizeTooltipValue(item?.value)
+
+      if (value === undefined && Array.isArray(item?.value) && item.value.length > 0) {
+        value = normalizeTooltipValue(item.value[0])
+      }
+
+      return `${item?.name ?? '--'}<br/>${formatMoney(value)}`
+    },
   },
   legend: {
     bottom: 0,
