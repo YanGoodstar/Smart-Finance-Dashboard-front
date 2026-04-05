@@ -24,66 +24,64 @@ defineEmits<{
       <StatusTag v-if="progress?.configured" :value="progress.warningLevel" />
     </div>
 
-    <div v-if="!progress?.items.length" class="sf-data-empty">
+    <div v-if="progress?.items.length" class="budget-progress__table-shell">
+      <el-table class="budget-progress__table" :data="progress.items" v-loading="loading">
+        <el-table-column label="预算项" min-width="150">
+          <template #default="{ row }">
+            {{ displayCategory(row.category) }}
+          </template>
+        </el-table-column>
+
+        <el-table-column label="预算金额" min-width="120" align="right">
+          <template #default="{ row }">
+            {{ formatMoney(row.budgetAmount) }}
+          </template>
+        </el-table-column>
+
+        <el-table-column label="实际支出" min-width="120" align="right">
+          <template #default="{ row }">
+            {{ formatMoney(row.actualSpent) }}
+          </template>
+        </el-table-column>
+
+        <el-table-column label="剩余金额" min-width="120" align="right">
+          <template #default="{ row }">
+            {{ formatMoney(row.remainingAmount) }}
+          </template>
+        </el-table-column>
+
+        <el-table-column label="使用率" min-width="100">
+          <template #default="{ row }">
+            {{ formatPercent(row.usageRate) }}
+          </template>
+        </el-table-column>
+
+        <el-table-column label="预警状态" min-width="110">
+          <template #default="{ row }">
+            <StatusTag :value="row.warningLevel" />
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+
+    <div v-else class="sf-data-empty">
       当前条件下还没有可展示的预算进度，换个时间或分类再看看。
     </div>
 
-    <template v-else>
-      <div class="budget-progress__table-shell">
-        <el-table class="budget-progress__table" :data="progress.items" v-loading="loading">
-          <el-table-column label="预算项" min-width="150">
-            <template #default="{ row }">
-              {{ displayCategory(row.category) }}
-            </template>
-          </el-table-column>
-
-          <el-table-column label="预算金额" min-width="120" align="right">
-            <template #default="{ row }">
-              {{ formatMoney(row.budgetAmount) }}
-            </template>
-          </el-table-column>
-
-          <el-table-column label="实际支出" min-width="120" align="right">
-            <template #default="{ row }">
-              {{ formatMoney(row.actualSpent) }}
-            </template>
-          </el-table-column>
-
-          <el-table-column label="剩余金额" min-width="120" align="right">
-            <template #default="{ row }">
-              {{ formatMoney(row.remainingAmount) }}
-            </template>
-          </el-table-column>
-
-          <el-table-column label="使用率" min-width="100">
-            <template #default="{ row }">
-              {{ formatPercent(row.usageRate) }}
-            </template>
-          </el-table-column>
-
-          <el-table-column label="预警状态" min-width="110">
-            <template #default="{ row }">
-              <StatusTag :value="row.warningLevel" />
-            </template>
-          </el-table-column>
-        </el-table>
+    <div v-if="progress" class="budget-progress__footer">
+      <div class="budget-progress__pagination-shell">
+        <el-pagination
+          background
+          layout="total, sizes, prev, pager, next"
+          :current-page="progress.page + 1"
+          :page-size="progress.size"
+          :page-sizes="[5, 10, 20]"
+          :total="progress.total"
+          @current-change="$emit('pageChange', $event)"
+          @size-change="$emit('sizeChange', $event)"
+        />
       </div>
-
-      <div class="budget-progress__footer">
-        <div class="budget-progress__pagination-shell">
-          <el-pagination
-            background
-            layout="total, sizes, prev, pager, next"
-            :current-page="progress.page"
-            :page-size="progress.size"
-            :page-sizes="[5, 10, 20]"
-            :total="progress.total"
-            @current-change="$emit('pageChange', $event)"
-            @size-change="$emit('sizeChange', $event)"
-          />
-        </div>
-      </div>
-    </template>
+    </div>
   </section>
 </template>
 

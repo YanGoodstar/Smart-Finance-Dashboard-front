@@ -129,7 +129,7 @@ async function loadBudgets(query: BudgetViewQuery) {
       listBudgets(query.budgetMonth),
       getBudgetProgress({
         budgetMonth: query.budgetMonth,
-        page: query.page,
+        page: Math.max(query.page - 1, 0),
         size: query.size,
         dateFrom: query.dateFrom,
         dateTo: query.dateTo,
