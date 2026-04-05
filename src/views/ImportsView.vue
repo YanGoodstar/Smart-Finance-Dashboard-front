@@ -133,7 +133,7 @@ async function handleUpload() {
 
   try {
     const createdJob = await uploadImportJob(sourceType.value, selectedFile.value)
-    ElMessage.success(`已创建导入任务 JOB-${createdJob.id}`)
+    ElMessage.success('已开始导入，可在列表中查看处理进度')
     selectedFile.value = null
     page.value = 0
     applySelection(createdJob.id)
@@ -166,23 +166,23 @@ function handleSizeChange(nextSize: number) {
 <template>
   <div class="sf-page imports-view">
     <section class="sf-card sf-page-hero imports-view__hero">
-      <div class="sf-page-hero__eyebrow">Imports / A2-41</div>
-      <h1 class="sf-page-hero__title">账单导入任务台</h1>
+      <div class="sf-page-hero__eyebrow">账单导入</div>
+      <h1 class="sf-page-hero__title">导入记录一目了然</h1>
       <p class="sf-page-hero__copy">
-        负责 CSV 文件上送、来源选择、任务列表浏览和单任务执行详情。页面会对运行中的任务自动轮询，便于联调时追踪处理进度。
+        选择账单文件后即可开始导入，并在同一页面查看处理进度、完成情况和异常原因。
       </p>
-      <div class="sf-page-hero__actions">
+      <div class="sf-page-hero__actions imports-view__hero-actions">
         <StatusTag v-if="selectedJob" mode="import-status" :value="selectedJob.status" />
-        <span class="sf-code-chip">{{ importSourceLabel(sourceType) }}</span>
-        <el-button plain :icon="RefreshRight" @click="loadJobs()">刷新任务</el-button>
+        <span class="imports-view__hero-note">{{ importSourceLabel(sourceType) }}</span>
+        <el-button plain :icon="RefreshRight" @click="loadJobs()">刷新记录</el-button>
       </div>
     </section>
 
     <section class="sf-card-grid sf-card-grid--4">
-      <MetricCard title="当前任务总数" :value="compactNumber(total)" hint="分页总量来自导入任务列表接口" accent="primary" />
-      <MetricCard title="处理中" :value="compactNumber(runningJobsCount)" hint="按当前页运行态任务统计" accent="accent" />
-      <MetricCard title="已结束" :value="compactNumber(terminalJobsCount)" hint="终态任务包含成功、部分成功、失败" accent="success" />
-      <MetricCard title="重复提示" :value="compactNumber(duplicateHintsCount)" hint="当前页任务累计疑似重复数" accent="danger" />
+      <MetricCard title="导入记录" :value="compactNumber(total)" hint="最近导入的账单都会显示在这里" accent="primary" />
+      <MetricCard title="进行中" :value="compactNumber(runningJobsCount)" hint="仍在处理中的导入记录" accent="accent" />
+      <MetricCard title="已完成" :value="compactNumber(terminalJobsCount)" hint="已经处理完的导入记录" accent="success" />
+      <MetricCard title="重复提醒" :value="compactNumber(duplicateHintsCount)" hint="需要你留意的重复记录数量" accent="danger" />
     </section>
 
     <section class="imports-view__content">
@@ -213,9 +213,9 @@ function handleSizeChange(nextSize: number) {
     />
 
     <section class="sf-card sf-panel imports-view__footer">
-      <h2 class="sf-section-title">联调备注</h2>
+      <h2 class="sf-section-title">导入提醒</h2>
       <div class="sf-inline-note">
-        当前页内失败任务数：{{ compactNumber(failedJobsCount) }}。如果后端返回 `PARTIAL_SUCCESS` 或 `FAILED`，详情卡会优先展示错误摘要。
+        当前有 {{ compactNumber(failedJobsCount) }} 条导入记录未完全成功。遇到异常时，可以打开右侧详情查看原因并重新整理账单。
       </div>
     </section>
   </div>
@@ -232,6 +232,25 @@ function handleSizeChange(nextSize: number) {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
   gap: 24px;
+}
+
+.imports-view__content > * {
+  min-width: 0;
+}
+
+.imports-view__hero-actions {
+  align-items: center;
+}
+
+.imports-view__hero-note {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.65);
+  color: var(--sf-primary);
+  font-weight: 600;
 }
 
 .imports-view__footer {

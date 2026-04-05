@@ -29,7 +29,7 @@ const form = reactive<CategoryRuleSaveRequest>({
   enabled: true,
 })
 
-const dialogTitle = computed(() => (props.rule ? `编辑规则 · #${props.rule.id}` : '新增分类规则'))
+const dialogTitle = computed(() => (props.rule ? '编辑规则' : '新增规则'))
 
 const rules: FormRules<typeof form> = {
   ruleName: [{ required: true, message: '请输入规则名称', trigger: 'blur' }],
@@ -109,7 +109,7 @@ async function submit() {
       </el-form-item>
 
       <div class="sf-inline-note">
-        规则保存后会进入共享规则列表，由后端按优先级和匹配表达式参与自动分类。
+        保存后，这条规则会出现在列表中，你可以随时再调整。
       </div>
     </el-form>
 
@@ -138,11 +138,16 @@ async function submit() {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
 @media (max-width: 720px) {
   .rule-dialog__grid {
     grid-template-columns: 1fr;
+  }
+
+  .rule-dialog__footer :deep(.el-button) {
+    flex: 1 1 0;
   }
 }
 </style>

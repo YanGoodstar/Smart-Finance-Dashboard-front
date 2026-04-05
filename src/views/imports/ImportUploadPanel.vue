@@ -54,7 +54,7 @@ function clearSelectedFile() {
 
 <template>
   <section class="sf-card sf-panel upload-panel">
-    <h2 class="sf-section-title">发起导入</h2>
+    <h2 class="sf-section-title">选择账单文件</h2>
 
     <div class="upload-panel__form">
       <label class="upload-panel__label">
@@ -86,7 +86,7 @@ function clearSelectedFile() {
         <el-icon class="upload-panel__icon"><UploadFilled /></el-icon>
         <div class="upload-panel__headline">拖拽或点击选择账单文件</div>
         <div class="upload-panel__tip">
-          支持冻结契约中的支付宝、微信 CSV。选择后不会自动上传，需要你手动确认。
+          支持支付宝和微信账单文件。选好后点击“开始导入”即可。
         </div>
       </el-upload>
 
@@ -97,7 +97,7 @@ function clearSelectedFile() {
         </template>
         <template v-else>
           <div class="upload-panel__selected-title">尚未选择文件</div>
-          <div class="sf-inline-note">建议先确认来源类型，再上传对应 CSV。</div>
+          <div class="sf-inline-note">先确认账单来源，再选择对应文件。</div>
         </template>
       </div>
 
@@ -108,10 +108,10 @@ function clearSelectedFile() {
           :disabled="!hasFile"
           @click="emit('submit')"
         >
-          提交导入
+          开始导入
         </el-button>
         <el-button :icon="DocumentDelete" :disabled="!hasFile || uploading" @click="clearSelectedFile">
-          清空选择
+          重新选择
         </el-button>
       </div>
     </div>
@@ -183,5 +183,16 @@ function clearSelectedFile() {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+  justify-content: flex-end;
+}
+
+@media (max-width: 720px) {
+  .upload-panel__actions {
+    justify-content: stretch;
+  }
+
+  .upload-panel__actions :deep(.el-button) {
+    flex: 1 1 0;
+  }
 }
 </style>

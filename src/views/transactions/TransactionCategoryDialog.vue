@@ -33,12 +33,7 @@ const rules: FormRules<typeof form> = {
   ],
 }
 
-const dialogTitle = computed(() => {
-  if (!props.transaction) {
-    return '修正分类'
-  }
-  return `修正分类 · #${props.transaction.id}`
-})
+const dialogTitle = computed(() => '调整分类')
 
 watch(
   () => [props.visible, props.transaction] as const,
@@ -92,10 +87,10 @@ async function submit() {
 
     <el-form ref="formRef" :model="form" :rules="rules" label-position="top" class="dialog__form">
       <el-form-item label="最终分类" prop="finalCategory">
-        <el-input v-model="form.finalCategory" placeholder="请输入修正后的分类" maxlength="32" show-word-limit />
+        <el-input v-model="form.finalCategory" placeholder="请输入新的分类名称" maxlength="32" show-word-limit />
       </el-form-item>
       <div class="sf-inline-note">
-        保存后会调用流水分类修正接口，分类来源会变为“人工修正”。
+        保存后，这笔流水会按你选择的分类显示。
       </div>
     </el-form>
 
@@ -124,5 +119,12 @@ async function submit() {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 720px) {
+  .dialog__footer :deep(.el-button) {
+    flex: 1 1 0;
+  }
 }
 </style>
