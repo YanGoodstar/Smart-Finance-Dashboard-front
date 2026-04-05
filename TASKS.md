@@ -2,124 +2,113 @@
 
 ## 当前阶段
 
-- 当前阶段：前端第一阶段主界面接后端接口
-- 阶段目标：打通“看板、导入、流水、预算、规则”五个前端页面，与既有后端接口形成可联调的 Web 主界面闭环
+- 当前阶段：前端第四阶段 UI 视觉与体验收口
+- 阶段目标：完成五个主页面的用户态收口，重点解决首页对齐与横向滚动、按钮位置与主次层级、页面中暴露给用户的内部技术信息
 - 基线分支：`yan`
-- Agent 分支：
-  - `feature/agent-1-front-dashboard-budget`
-  - `feature/agent-2-front-imports-transactions-rules`
-- Agent 工作树：
-  - `F:\Smart-Finance-Dashboard-front\.worktrees\front-agent-1`
-  - `F:\Smart-Finance-Dashboard-front\.worktrees\front-agent-2`
+- 建议 Agent 分支：
+  - `feature/agent-1-front-stage4-home-budget-polish`
+  - `feature/agent-2-front-stage4-flow-rule-polish`
+- 建议 Agent 工作树：
+  - `F:\Smart-Finance-Dashboard-front\.worktrees\front-agent-1-stage4`
+  - `F:\Smart-Finance-Dashboard-front\.worktrees\front-agent-2-stage4`
 - 当前仓库范围：仅前端
 - 本阶段约束：
-  - 延续后端双 Agent 协作方式，由架构师统一调度、冻结共享边界并最终集成
-  - 本阶段优先完成页面主链路、接口联通、交互闭环和基础视觉，不把测试作为首批阻塞项
-  - 不允许本阶段 Agent 擅自修改后端契约；若发现后端接口与前端实现不匹配，先发 `BLOCKER` 或 `CONTRACT_CHANGE`
-  - `postman/` 不在本仓库范围内，本阶段不维护任何 Postman 文件
+  - 延续双 Agent 并行方式，由架构师统一冻结共享视觉边界并做最终集成
+  - 本阶段不新增业务功能，不改后端接口语义，不扩展新页面
+  - 优先修复用户可见问题，不把“技术上能跑”当成交付标准
+  - 一切文案、布局、按钮、表格、提示信息都以“用户态可见性”作为判断标准
+  - 不允许页面暴露任务编号、Agent 信息、query 字段、接口字段解释等内部实现细节
 
 ## 当前前端基线
 
-- 已完成 `Vue 3 + Vite + TypeScript` 前端工程初始化
-- 已完成 `Element Plus`、`Pinia`、`Axios`、`Vue Router`、`ECharts` 依赖接入
-- 已完成 Vite 开发代理：`/api -> http://localhost:8080`
-- 已完成全局样式基线、主布局、侧边栏、API 请求层、类型层和图表基础组件
-- 已冻结首批页面路由：
+- 五个主页面已接通后端接口：
   - `/dashboard`
   - `/imports`
   - `/transactions`
   - `/budgets`
   - `/rules`
+- 生产构建已通过：`npm run build`
+- 当前主要剩余问题集中在：
+  - 首页下方横向滚动条
+  - 页面模块左右边界与按钮位置不一致
+  - 页面上存在内部信息、联调说明、字段说明、任务编号等不该暴露给用户的内容
 
-## 前端第一阶段全局任务看板
+## 前端第四阶段全局任务看板
 
 | ID | 模块 | 任务 | 负责人 | 分支 | 状态 | 依赖 | 预计耗时 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| ARC-41 | 共享契约 | 冻结前端页面范围、路由入口、共享 API / type / layout 边界以及页面交互口径 | Architect | `yan` | todo | none | 0.25d |
-| ARC-42 | 集成验证 | 合并双分支、解决共享样式与路由冲突、执行前端构建验证与联调收口 | Architect | `yan` | todo | A1-45, A2-45 | 0.5d |
-| ARC-43 | 共享壳层 | 维护主布局、共享组件、共享工具、API 层、router 和全局样式，处理跨页面收口 | Architect | `yan` | todo | ARC-41 | 0.5d |
-| A1-41 | 看板页面 | 实现 `DashboardView.vue`，打通筛选表单、概览卡片、趋势图、分类图、预算提醒、未分类摘要、最近流水 | Agent-1 | `feature/agent-1-front-dashboard-budget` | todo | ARC-41 | 1.0d |
-| A1-42 | 预算页面 | 实现 `BudgetsView.vue`，打通预算创建、预算列表、预算进度、预警等级和分类预算展示 | Agent-1 | `feature/agent-1-front-dashboard-budget` | todo | ARC-41 | 1.0d |
-| A1-43 | 页面局部组件 | 若 dashboard / budgets 需要新增局部组件，只能放到页面私有目录中，不得直接修改共享组件 | Agent-1 | `feature/agent-1-front-dashboard-budget` | todo | A1-41, A1-42 | 0.5d |
-| A1-44 | 查询态同步 | 为 dashboard / budgets 页面补齐默认时间范围、路由 query 同步、空态和错误态 | Agent-1 | `feature/agent-1-front-dashboard-budget` | todo | A1-41, A1-42 | 0.5d |
-| A1-45 | 提交收口 | 自查 `git diff`，完成本分支提交并上报状态、文件列表和提交哈希 | Agent-1 | `feature/agent-1-front-dashboard-budget` | todo | A1-43, A1-44 | 0.25d |
-| A2-41 | 导入页面 | 实现 `ImportsView.vue`，打通文件上传、来源类型选择、导入任务列表和任务详情展示 | Agent-2 | `feature/agent-2-front-imports-transactions-rules` | todo | ARC-41 | 0.75d |
-| A2-42 | 流水页面 | 实现 `TransactionsView.vue`，打通交易筛选、分页、分类来源显示、疑似重复提示和分类修正对话框 | Agent-2 | `feature/agent-2-front-imports-transactions-rules` | todo | ARC-41 | 1.0d |
-| A2-43 | 规则页面 | 实现 `RulesView.vue`，打通规则列表、启用过滤、新增、编辑和删除交互 | Agent-2 | `feature/agent-2-front-imports-transactions-rules` | todo | ARC-41 | 0.75d |
-| A2-44 | 页面局部组件 | 若 imports / transactions / rules 需要新增局部组件，只能放到页面私有目录中，不得直接修改共享组件 | Agent-2 | `feature/agent-2-front-imports-transactions-rules` | todo | A2-41, A2-42, A2-43 | 0.5d |
-| A2-45 | 提交收口 | 自查 `git diff`，完成本分支提交并上报状态、文件列表和提交哈希 | Agent-2 | `feature/agent-2-front-imports-transactions-rules` | todo | A2-44 | 0.25d |
+| ARC-51 | 共享视觉契约 | 冻结本轮视觉收口边界，统一页面标题、按钮层级、用户文案和技术信息隐藏规则 | Architect | `yan` | todo | none | 0.25d |
+| ARC-52 | 共享壳层收口 | 维护主布局、侧边栏、共享组件、全局样式和全局文案策略，兜底页面对齐与按钮规则 | Architect | `yan` | todo | ARC-51 | 0.5d |
+| ARC-53 | 最终验收 | 合并双分支，执行构建与手工验收，确认无横向滚动、无内部信息泄漏、无明显按钮错位 | Architect | `yan` | todo | A1-55, A2-55 | 0.5d |
+| A1-51 | 首页对齐与滚动条 | 解决 dashboard 首页模块左右边界不齐、图表区与表格区对齐问题，以及首页底部横向滚动条问题 | Agent-1 | `feature/agent-1-front-stage4-home-budget-polish` | todo | ARC-51 | 1.0d |
+| A1-52 | 看板与预算按钮收口 | 统一 dashboard / budgets 页按钮位置、主次层级、移动端堆叠规则和操作区间距 | Agent-1 | `feature/agent-1-front-stage4-home-budget-polish` | todo | A1-51 | 0.75d |
+| A1-53 | 用户文案清理 | 清理 dashboard / budgets 范围内的 Agent 标识、任务编号、query/字段说明、联调语气与技术表述 | Agent-1 | `feature/agent-1-front-stage4-home-budget-polish` | todo | ARC-51 | 0.75d |
+| A1-54 | 页面局部视觉收口 | 优化 dashboard / budgets 私有组件中的卡片密度、留白、表格容器、空态和信息层级 | Agent-1 | `feature/agent-1-front-stage4-home-budget-polish` | todo | A1-52, A1-53 | 0.75d |
+| A1-55 | 提交收口 | 自查 diff、确认本分支仅包含 Agent-1 范围文件、完成提交并上报哈希与风险 | Agent-1 | `feature/agent-1-front-stage4-home-budget-polish` | todo | A1-54 | 0.25d |
+| A2-51 | 导入/流水/规则文案清理 | 清理 imports / transactions / rules 范围内的 Agent 标识、任务编号、接口字段解释、联调说明与技术文案 | Agent-2 | `feature/agent-2-front-stage4-flow-rule-polish` | todo | ARC-51 | 0.75d |
+| A2-52 | 按钮与工具条收口 | 统一 imports / transactions / rules 页 Hero 按钮、筛选区、列表工具条和弹窗按钮位置 | Agent-2 | `feature/agent-2-front-stage4-flow-rule-polish` | todo | A2-51 | 0.75d |
+| A2-53 | 列表与溢出修复 | 修复 imports / transactions / rules 页表格区、分页区、卡片区的对齐和潜在横向溢出问题 | Agent-2 | `feature/agent-2-front-stage4-flow-rule-polish` | todo | ARC-51 | 0.75d |
+| A2-54 | 页面局部视觉收口 | 收敛 imports / transactions / rules 私有组件中的信息层级、标签密度、用户态提示与空态表现 | Agent-2 | `feature/agent-2-front-stage4-flow-rule-polish` | todo | A2-52, A2-53 | 0.75d |
+| A2-55 | 提交收口 | 自查 diff、确认本分支仅包含 Agent-2 范围文件、完成提交并上报哈希与风险 | Agent-2 | `feature/agent-2-front-stage4-flow-rule-polish` | todo | A2-54 | 0.25d |
 
-## 冻结的前端共享契约
+## 冻结的前端第四阶段共享契约
 
-### 页面与路由契约
+### 用户态可见性契约
 
-- 本阶段页面入口固定为：
-  - `/dashboard`
-  - `/imports`
-  - `/transactions`
-  - `/budgets`
-  - `/rules`
-- 不新增新的一级页面路由
-- 不调整 `MainLayout` 作为五个页面共用壳层的方案
+- 页面上不得出现以下内部信息：
+  - `Agent-1`、`Agent-2`
+  - `A1-xx`、`A2-xx`
+  - `query`
+  - `page/size/dateFrom/dateTo`
+  - `categorySource = MANUAL`
+  - `API`
+  - `total`
+  - “联调期”“联调说明”“接口返回”等开发态提示
+- 页面标题、说明文案、空态文案必须面向最终用户，不得解释系统实现方式
 
-### 后端接口消费边界
+### 布局与对齐契约
 
-- 前端统一复用 `src/api/**` 中的请求封装
-- 本阶段不允许 Agent 直接在页面中写裸 `axios` 请求
-- 后端通用返回结构固定为：
-  - `success`
-  - `code`
-  - `message`
-  - `data`
-- Vite 开发代理固定为：
-  - `/api -> http://localhost:8080`
+- 五个页面统一使用当前 `MainLayout` 壳层，不新增新的一级布局
+- 任何页面不得出现整页级别的横向滚动条
+- 如表格确实过宽，只允许在表格局部容器内部横向滚动
+- Hero、筛选区、卡片区、内容区左右边界应保持同一视觉线
 
-### 交易筛选语义
+### 按钮层级契约
 
-- `dashboard`、`transactions`、`budgets/progress` 继续复用同一套筛选语义：
-  - `page`
-  - `size`
-  - `dateFrom`
-  - `dateTo`
-  - `finalCategory`
-  - `categorySource`
-  - `keyword`
-- 默认联调日期口径优先使用上月范围，兼容当前样例数据
+- 每个页面只保留一个主按钮焦点，其他操作必须降级为次按钮、浅色按钮或文字按钮
+- Hero 区操作遵循：
+  - 主操作优先
+  - 刷新类操作降级
+  - 辅助信息不与按钮争夺视觉焦点
+- 弹窗底部按钮遵循：
+  - 取消在左
+  - 提交在右
+  - 提交按钮为唯一主按钮
 
-### 导入与预算展示语义
+### 非目标
 
-- 导入来源类型冻结为：
-  - `ALIPAY_CSV`
-  - `WECHAT_CSV`
-- 总预算对外展示语义冻结为：
-  - `category = null` 时，页面显示为“总预算”
-- 预算预警等级冻结为：
-  - `NORMAL`
-  - `NEAR_LIMIT`
-  - `OVER_BUDGET`
-
-### 本阶段非目标
-
-- 不做登录鉴权页面
-- 不做权限系统
-- 不做国际化
-- 不做 SSR
-- 不改后端接口语义
+- 不新增新功能
+- 不新增新接口
+- 不改后端逻辑
+- 不做重设计或换主题
+- 不做大规模重构
 
 ## 依赖协调规则
 
-1. 架构师先冻结页面范围、共享 API / type / layout 边界，Agent 再开始编码。
-2. Agent-1 只负责 `dashboard` 和 `budgets` 页面，不得修改 `imports`、`transactions`、`rules` 页面。
-3. Agent-2 只负责 `imports`、`transactions`、`rules` 页面，不得修改 `dashboard`、`budgets` 页面。
+1. 架构师先冻结文案隐藏规则、按钮层级规则和全局对齐规则，Agent 再开始编码。
+2. Agent-1 只负责 `dashboard`、`budgets` 页面和其私有目录，不得修改 `imports`、`transactions`、`rules` 页面。
+3. Agent-2 只负责 `imports`、`transactions`、`rules` 页面和其私有目录，不得修改 `dashboard`、`budgets` 页面。
 4. 两个 Agent 默认都不得修改：
-   - `src/api/**`
-   - `src/types/**`
-   - `src/router/**`
    - `src/layouts/**`
    - `src/components/**`
    - `src/style.css`
-5. 如果确需改共享文件，必须先发 `CONTRACT_CHANGE`，由架构师决定是否授权。
-6. 页面专属组件必须优先放入各自页面私有目录，避免直接占用共享组件目录。
+   - `src/api/**`
+   - `src/types/**`
+   - `src/router/**`
+   - `src/main.ts`
+   - `src/App.vue`
+5. 如确需修改共享文件，必须先发 `CONTRACT_CHANGE`，由架构师决定是否授权。
+6. 页面私有组件优先在各自目录内收口，不得把本轮 UI 修复随意挪进共享层。
 
 ## 通信协议
 
@@ -127,7 +116,7 @@
 
 - `INFO`：非阻塞进度同步
 - `BLOCKER`：当前任务无法继续，需要协调
-- `CONTRACT_CHANGE`：共享 API、共享类型、共享样式、共享组件、路由或跨页面边界需要变更
+- `CONTRACT_CHANGE`：共享布局、共享样式、共享组件、共享文案或跨页面边界需要变更
 
 ### 消息模板
 
@@ -149,9 +138,9 @@ Requested By: <date-time>
 
 ## 执行说明
 
-- Agent-1 负责看板页和预算页主链路，以及仅属于这两个页面的局部组件。
-- Agent-2 负责导入页、流水页、规则页主链路，以及仅属于这三个页面的局部组件。
-- 架构师负责共享组件、共享样式、请求层、类型层、路由层和最终集成。
+- Agent-1 负责首页与预算页的对齐、滚动、按钮和用户文案收口。
+- Agent-2 负责导入、流水、规则页的对齐、按钮和用户文案收口。
+- 架构师负责共享样式、共享组件、主布局、侧边栏、全局词汇和最终集成。
 - 未经锁移交批准，任何 Agent 不得修改：
   - `package.json`
   - `package-lock.json`
