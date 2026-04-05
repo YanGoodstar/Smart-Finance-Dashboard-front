@@ -1,7 +1,18 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import * as echarts from 'echarts'
+import * as echarts from 'echarts/core'
+import { BarChart, LineChart } from 'echarts/charts'
+import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/components'
+import { CanvasRenderer } from 'echarts/renderers'
+import type { BarSeriesOption, LineSeriesOption } from 'echarts/charts'
+import type { GridComponentOption, LegendComponentOption, TooltipComponentOption } from 'echarts/components'
 import type { DashboardTrendPointResponse } from '@/types/dashboard'
+
+echarts.use([LineChart, BarChart, GridComponent, TooltipComponent, LegendComponent, CanvasRenderer])
+
+type TrendChartOption = echarts.ComposeOption<
+  BarSeriesOption | LineSeriesOption | GridComponentOption | LegendComponentOption | TooltipComponentOption
+>
 
 const props = defineProps<{
   data: DashboardTrendPointResponse[]
@@ -10,7 +21,7 @@ const props = defineProps<{
 const rootRef = ref<HTMLDivElement | null>(null)
 let chart: echarts.ECharts | null = null
 
-const option = computed<echarts.EChartsOption>(() => ({
+const option = computed<TrendChartOption>(() => ({
   tooltip: { trigger: 'axis' },
   legend: {
     top: 8,

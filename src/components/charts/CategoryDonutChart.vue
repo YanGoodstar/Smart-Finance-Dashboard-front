@@ -1,8 +1,21 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import * as echarts from 'echarts'
+import * as echarts from 'echarts/core'
+import { PieChart } from 'echarts/charts'
+import { LegendComponent, TooltipComponent } from 'echarts/components'
+import { CanvasRenderer } from 'echarts/renderers'
+import type { PieSeriesOption } from 'echarts/charts'
+import type { LegendComponentOption, TooltipComponentOption } from 'echarts/components'
 import type { DashboardCategoryBreakdownResponse } from '@/types/dashboard'
 import { formatMoney } from '@/utils/format'
+
+echarts.use([PieChart, TooltipComponent, LegendComponent, CanvasRenderer])
+
+type DonutChartOption = echarts.ComposeOption<PieSeriesOption | LegendComponentOption | TooltipComponentOption>
+type TooltipFormatterItem = {
+  name?: string
+  value?: unknown
+}
 
 const props = defineProps<{
   data: DashboardCategoryBreakdownResponse[]
@@ -23,19 +36,20 @@ function normalizeTooltipValue(value: unknown): string | number | undefined {
   return undefined
 }
 
-const option = computed<echarts.EChartsOption>(() => ({
+const option = computed<DonutChartOption>(() => ({
   color: palette,
   tooltip: {
     trigger: 'item',
-    formatter: (params) => {
+    formatter: (params: unknown) => {
       const item = Array.isArray(params) ? params[0] : params
-      let value = normalizeTooltipValue(item?.value)
+      const formatterItem = (item ?? {}) as TooltipFormatterItem
+      let value = normalizeTooltipValue(formatterItem.value)
 
-      if (value === undefined && Array.isArray(item?.value) && item.value.length > 0) {
-        value = normalizeTooltipValue(item.value[0])
+      if (value === undefined && Array.isArray(formatterItem.value) && formatterItem.value.length > 0) {
+        value = normalizeTooltipValue(formatterItem.value[0])
       }
 
-      return `${item?.name ?? '--'}<br/>${formatMoney(value)}`
+      return `${formatterItem.name ?? '--'}<br/>${formatMoney(value)}`
     },
   },
   legend: {

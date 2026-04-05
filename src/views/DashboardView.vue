@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue'
+import { computed, defineAsyncComponent, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import type { LocationQueryRaw } from 'vue-router'
 import { RefreshRight } from '@element-plus/icons-vue'
 import MetricCard from '@/components/MetricCard.vue'
-import CategoryDonutChart from '@/components/charts/CategoryDonutChart.vue'
-import TrendChart from '@/components/charts/TrendChart.vue'
 import { getDashboardOverview } from '@/api/dashboard'
 import type { DashboardOverviewResponse, DashboardQuery } from '@/types/dashboard'
 import type { CategorySource } from '@/types/shared'
@@ -17,6 +15,9 @@ import DashboardFilters from '@/views/dashboard/DashboardFilters.vue'
 import DashboardHero from '@/views/dashboard/DashboardHero.vue'
 import DashboardRecentTransactions from '@/views/dashboard/DashboardRecentTransactions.vue'
 import DashboardUnclassifiedSummary from '@/views/dashboard/DashboardUnclassifiedSummary.vue'
+
+const TrendChart = defineAsyncComponent(() => import('@/components/charts/TrendChart.vue'))
+const CategoryDonutChart = defineAsyncComponent(() => import('@/components/charts/CategoryDonutChart.vue'))
 
 const route = useRoute()
 const router = useRouter()
