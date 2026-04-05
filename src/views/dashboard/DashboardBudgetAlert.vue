@@ -29,13 +29,13 @@ const progressStatus = computed(() => {
     <div class="dashboard-budget-alert__header">
       <div>
         <div class="sf-section-title">预算提醒</div>
-        <div class="sf-inline-note">看板按当前时间窗口同步预算压力，直接暴露是否接近或超出预算。</div>
+        <div class="sf-inline-note">看看本月预算还剩多少空间。</div>
       </div>
       <StatusTag v-if="alert?.configured" :value="alert.warningLevel" />
     </div>
 
     <div v-if="!alert?.configured" class="sf-data-empty">
-      当前月份还没有可用预算配置，预算页创建后这里会自动联动。
+      当前月份还没有预算设置，先添加预算后再回来查看。
     </div>
 
     <template v-else>

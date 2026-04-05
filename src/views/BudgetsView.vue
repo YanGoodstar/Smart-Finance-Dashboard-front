@@ -241,25 +241,25 @@ const summaryCards = computed(() => [
   {
     title: '预算项数',
     value: compactNumber(budgets.value.length),
-    hint: '包含总预算与分类预算',
+    hint: '本月已设置的预算条目',
     accent: 'primary' as const,
   },
   {
     title: '总预算',
     value: formatMoney(progress.value?.totalBudget),
-    hint: progress.value?.configured ? '来自预算进度接口' : '当前未配置',
+    hint: progress.value?.configured ? '本月预算总额' : '暂未设置',
     accent: 'accent' as const,
   },
   {
     title: '已支出',
     value: formatMoney(progress.value?.totalSpent),
-    hint: '按当前筛选窗口统计',
+    hint: '当前已发生的支出',
     accent: 'danger' as const,
   },
   {
     title: '使用率',
     value: formatPercent(progress.value?.usageRate),
-    hint: progress.value?.configured ? '预算预警会同步显示' : '创建预算后可见',
+    hint: progress.value?.configured ? '本月预算使用情况' : '创建预算后显示',
     accent: 'success' as const,
   },
 ])
@@ -353,10 +353,23 @@ const summaryCards = computed(() => [
 </template>
 
 <style scoped>
+.budgets-page {
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+.budgets-page > * {
+  min-width: 0;
+}
+
 .budgets-page__overview {
   display: grid;
   gap: 16px;
   grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.9fr);
+}
+
+.budgets-page__overview > * {
+  min-width: 0;
 }
 
 .budgets-page__panel {

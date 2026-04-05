@@ -179,19 +179,19 @@ const cards = computed(() => [
   {
     title: '总支出',
     value: formatMoney(summary.value?.totalExpense),
-    hint: '按当前筛选窗口聚合',
+    hint: '当前筛选范围内的支出',
     accent: 'danger' as const,
   },
   {
     title: '净额',
     value: formatMoney(summary.value?.netAmount),
-    hint: '收入减去支出',
+    hint: '收入减去支出后的结果',
     accent: 'accent' as const,
   },
   {
-    title: '分类数',
+    title: '支出分类',
     value: compactNumber(overview.value?.categoryBreakdowns.length),
-    hint: '分类分布图自动联动',
+    hint: '已统计的支出分类数量',
     accent: 'primary' as const,
   },
 ])
@@ -267,6 +267,15 @@ const cards = computed(() => [
 </template>
 
 <style scoped>
+.dashboard-page {
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+.dashboard-page > * {
+  min-width: 0;
+}
+
 .dashboard-page__metrics,
 .dashboard-page__charts,
 .dashboard-page__summary {
@@ -278,6 +287,11 @@ const cards = computed(() => [
   display: grid;
   gap: 16px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dashboard-page__charts > *,
+.dashboard-page__summary > * {
+  min-width: 0;
 }
 
 @media (max-width: 1100px) {

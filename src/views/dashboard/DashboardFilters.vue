@@ -61,7 +61,7 @@ function submit() {
 
 <template>
   <section class="sf-panel sf-card">
-    <div class="sf-section-title">筛选条件</div>
+    <div class="sf-section-title">筛选</div>
 
     <el-form label-position="top">
       <div class="sf-filter-grid">
@@ -77,12 +77,12 @@ function submit() {
           />
         </el-form-item>
 
-        <el-form-item label="最终分类">
+        <el-form-item label="分类">
           <el-input v-model="form.finalCategory" clearable placeholder="例如：餐饮、交通、房租" />
         </el-form-item>
 
-        <el-form-item label="分类来源">
-          <el-select v-model="form.categorySource" clearable placeholder="全部来源">
+        <el-form-item label="分类方式">
+          <el-select v-model="form.categorySource" clearable placeholder="全部方式">
             <el-option
               v-for="option in categorySourceOptions"
               :key="option.value"
@@ -93,7 +93,7 @@ function submit() {
         </el-form-item>
 
         <el-form-item label="关键词">
-          <el-input v-model="form.keyword" clearable placeholder="按商户、摘要模糊过滤" />
+          <el-input v-model="form.keyword" clearable placeholder="搜索商户或备注" />
         </el-form-item>
 
         <el-form-item label="每页条数">
@@ -106,9 +106,8 @@ function submit() {
       </div>
 
       <div class="sf-toolbar dashboard-filters__actions">
-        <el-button type="primary" :icon="Search" :loading="loading" @click="submit">应用筛选</el-button>
+        <el-button type="primary" :icon="Search" :loading="loading" @click="submit">查看结果</el-button>
         <el-button plain @click="$emit('reset')">恢复默认</el-button>
-        <span class="sf-inline-note">默认使用上月范围，`page/size/dateFrom/dateTo` 会与路由 query 保持同步。</span>
       </div>
     </el-form>
   </section>
@@ -116,13 +115,21 @@ function submit() {
 
 <style scoped>
 .dashboard-filters__actions {
-  justify-content: space-between;
+  justify-content: flex-start;
   margin-top: 8px;
 }
 
-@media (max-width: 900px) {
-  .dashboard-filters__actions {
-    justify-content: flex-start;
-  }
+:deep(.el-form-item__content) {
+  min-width: 0;
+}
+
+:deep(.el-date-editor),
+:deep(.el-select),
+:deep(.el-input) {
+  width: 100%;
+}
+
+:deep(.el-date-editor--daterange) {
+  max-width: 100%;
 }
 </style>

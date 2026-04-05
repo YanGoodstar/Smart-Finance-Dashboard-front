@@ -65,7 +65,7 @@ function submit() {
 
 <template>
   <section class="sf-panel sf-card">
-    <div class="sf-section-title">预算筛选</div>
+    <div class="sf-section-title">查看条件</div>
 
     <el-form label-position="top">
       <div class="sf-filter-grid">
@@ -90,12 +90,12 @@ function submit() {
           />
         </el-form-item>
 
-        <el-form-item label="最终分类">
-          <el-input v-model="form.finalCategory" clearable placeholder="按分类名称过滤进度项" />
+        <el-form-item label="分类">
+          <el-input v-model="form.finalCategory" clearable placeholder="按分类名称筛选" />
         </el-form-item>
 
-        <el-form-item label="分类来源">
-          <el-select v-model="form.categorySource" clearable placeholder="全部来源">
+        <el-form-item label="分类方式">
+          <el-select v-model="form.categorySource" clearable placeholder="全部方式">
             <el-option
               v-for="option in categorySourceOptions"
               :key="option.value"
@@ -106,7 +106,7 @@ function submit() {
         </el-form-item>
 
         <el-form-item label="关键词">
-          <el-input v-model="form.keyword" clearable placeholder="按账单摘要或商户过滤" />
+          <el-input v-model="form.keyword" clearable placeholder="搜索商户或备注" />
         </el-form-item>
 
         <el-form-item label="每页条数">
@@ -119,9 +119,8 @@ function submit() {
       </div>
 
       <div class="sf-toolbar budget-filters__actions">
-        <el-button type="primary" :icon="Search" :loading="loading" @click="submit">应用筛选</el-button>
+        <el-button type="primary" :icon="Search" :loading="loading" @click="submit">查看结果</el-button>
         <el-button plain @click="$emit('reset')">恢复默认</el-button>
-        <span class="sf-inline-note">`budgetMonth/page/size/dateFrom/dateTo` 会写回路由 query。</span>
       </div>
     </el-form>
   </section>
@@ -129,13 +128,21 @@ function submit() {
 
 <style scoped>
 .budget-filters__actions {
-  justify-content: space-between;
+  justify-content: flex-start;
   margin-top: 8px;
 }
 
-@media (max-width: 900px) {
-  .budget-filters__actions {
-    justify-content: flex-start;
-  }
+:deep(.el-form-item__content) {
+  min-width: 0;
+}
+
+:deep(.el-date-editor),
+:deep(.el-select),
+:deep(.el-input) {
+  width: 100%;
+}
+
+:deep(.el-date-editor--daterange) {
+  max-width: 100%;
 }
 </style>

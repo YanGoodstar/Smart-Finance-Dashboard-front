@@ -33,15 +33,15 @@ defineEmits<{
 
 const headline = computed(() => {
   if (!props.configured) {
-    return '先建立预算基线，再观察分类支出是否逼近上限。'
+    return '先为常用分类设定预算，再慢慢把消费节奏拉回掌控。'
   }
-  return '总预算、分类预算和支出进度在同一页完成收口。'
+  return '本月预算使用情况已经整理好，哪些分类该收紧一眼就能看清。'
 })
 </script>
 
 <template>
   <section class="sf-page-hero sf-card budget-hero">
-    <div class="sf-page-hero__eyebrow">Budgets / Agent-1</div>
+    <div class="sf-page-hero__eyebrow">预算管理</div>
     <h2 class="sf-page-hero__title">{{ headline }}</h2>
     <p class="sf-page-hero__copy">
       当前查看月份为 <strong>{{ toMonthLabel(budgetMonth) }}</strong>，
@@ -52,11 +52,16 @@ const headline = computed(() => {
       <template v-else>本月尚未形成完整预算进度，可先创建“总预算”或分类预算。</template>
     </p>
 
-    <div class="sf-page-hero__actions">
-      <el-button type="primary" @click="$emit('create')">新建预算</el-button>
-      <el-button plain :loading="loading" @click="$emit('refresh')">刷新预算</el-button>
-      <span class="sf-code-chip">{{ toMonthLabel(budgetMonth) }}</span>
-      <StatusTag v-if="configured" :value="warningLevel" />
+    <div class="sf-page-hero__actions budget-hero__actions">
+      <div class="budget-hero__buttons">
+        <el-button type="primary" @click="$emit('create')">新建预算</el-button>
+        <el-button plain :loading="loading" @click="$emit('refresh')">刷新</el-button>
+      </div>
+
+      <div class="budget-hero__meta">
+        <span class="budget-hero__chip">{{ toMonthLabel(budgetMonth) }}</span>
+        <StatusTag v-if="configured" :value="warningLevel" />
+      </div>
     </div>
   </section>
 </template>
@@ -70,5 +75,35 @@ const headline = computed(() => {
 
 .budget-hero strong {
   color: var(--sf-primary);
+}
+
+.budget-hero__actions {
+  align-items: flex-start;
+}
+
+.budget-hero__buttons,
+.budget-hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.budget-hero__chip {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  padding: 8px 12px;
+  border: 1px solid rgba(21, 35, 58, 0.08);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--sf-text-muted);
+  font-size: 13px;
+  word-break: break-word;
+}
+
+@media (max-width: 900px) {
+  .budget-hero__actions {
+    flex-direction: column;
+  }
 }
 </style>

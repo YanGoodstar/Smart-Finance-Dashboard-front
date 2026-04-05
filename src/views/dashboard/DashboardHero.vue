@@ -28,6 +28,14 @@ defineEmits<{
   reset: []
 }>()
 
+const periodLabel = computed(() => {
+  if (!props.dateFrom || !props.dateTo) {
+    return '最近账务概览'
+  }
+
+  return `${props.dateFrom} 至 ${props.dateTo}`
+})
+
 const filterChips = computed(() => {
   const chips: string[] = []
 
@@ -47,18 +55,23 @@ const filterChips = computed(() => {
 
 <template>
   <section class="sf-page-hero sf-card dashboard-hero">
-    <div class="sf-page-hero__eyebrow">Dashboard / Agent-1</div>
-    <h2 class="sf-page-hero__title">先看现金流，再看预算压力，把异常分类收拢到同一屏。</h2>
+    <div class="sf-page-hero__eyebrow">财务概览</div>
+    <h2 class="sf-page-hero__title">收支走势、预算提醒和近期记录一屏掌握。</h2>
     <p class="sf-page-hero__copy">
-      当前联调窗口覆盖 <strong>{{ dateFrom || '--' }}</strong> 到 <strong>{{ dateTo || '--' }}</strong>，
-      共追踪 <strong>{{ transactionCount }}</strong> 条交易。页面查询参数会与路由同步，便于回放筛选状态。
+      查看 <strong>{{ periodLabel }}</strong> 的收支变化与消费分布，
+      共找到 <strong>{{ transactionCount }}</strong> 条相关记录。
     </p>
 
-    <div class="sf-page-hero__actions">
-      <el-button type="primary" :loading="loading" @click="$emit('refresh')">刷新数据</el-button>
-      <el-button plain @click="$emit('reset')">恢复默认范围</el-button>
-      <span class="sf-code-chip">{{ dateFrom || '--' }} -> {{ dateTo || '--' }}</span>
-      <span v-for="chip in filterChips" :key="chip" class="dashboard-hero__chip">{{ chip }}</span>
+    <div class="sf-page-hero__actions dashboard-hero__actions">
+      <div class="dashboard-hero__buttons">
+        <el-button type="primary" @click="$emit('reset')">回到默认视图</el-button>
+        <el-button plain :loading="loading" @click="$emit('refresh')">刷新</el-button>
+      </div>
+
+      <div class="dashboard-hero__meta">
+        <span class="dashboard-hero__chip">{{ periodLabel }}</span>
+        <span v-for="chip in filterChips" :key="chip" class="dashboard-hero__chip">{{ chip }}</span>
+      </div>
     </div>
   </section>
 </template>
@@ -74,14 +87,37 @@ const filterChips = computed(() => {
   color: var(--sf-primary);
 }
 
+.dashboard-hero__actions {
+  align-items: flex-start;
+}
+
+.dashboard-hero__buttons,
+.dashboard-hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.dashboard-hero__meta {
+  min-width: 0;
+}
+
 .dashboard-hero__chip {
   display: inline-flex;
   align-items: center;
+  max-width: 100%;
   padding: 8px 12px;
   border: 1px solid rgba(21, 35, 58, 0.08);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.6);
   color: var(--sf-text-muted);
   font-size: 13px;
+  word-break: break-word;
+}
+
+@media (max-width: 900px) {
+  .dashboard-hero__actions {
+    flex-direction: column;
+  }
 }
 </style>

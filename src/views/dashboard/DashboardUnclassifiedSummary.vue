@@ -9,10 +9,10 @@ defineProps<{
 
 <template>
   <section class="sf-panel sf-card dashboard-unclassified">
-    <div class="sf-section-title">未分类摘要</div>
+    <div class="sf-section-title">待整理记录</div>
 
     <div v-if="!summary?.hasUnclassified" class="sf-data-empty">
-      当前筛选范围内没有未分类交易，可以继续在流水页校验分类准确率。
+      当前记录都已整理完成。
     </div>
 
     <div v-else class="dashboard-unclassified__grid">
