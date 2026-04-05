@@ -46,8 +46,8 @@ const executionLabel = computed(() => {
   <section class="sf-card sf-panel detail-card">
     <div class="detail-card__header">
       <div>
-        <h2 class="sf-section-title">任务详情</h2>
-        <div class="sf-inline-note">展示单个导入任务的执行结果、处理统计和错误摘要。</div>
+        <h2 class="sf-section-title">处理详情</h2>
+        <div class="sf-inline-note">查看本次导入的进度、完成情况和异常提示。</div>
       </div>
       <StatusTag v-if="job" mode="import-status" :value="job.status" />
     </div>
@@ -62,7 +62,7 @@ const executionLabel = computed(() => {
 
     <template v-else>
       <div class="detail-card__chips">
-        <span class="sf-code-chip">JOB-{{ job.id }}</span>
+        <span class="sf-code-chip">第 {{ job.id }} 批</span>
         <span class="sf-code-chip">{{ importSourceLabel(job.sourceType) }}</span>
         <span class="sf-code-chip">{{ executionLabel }}</span>
       </div>
@@ -89,13 +89,13 @@ const executionLabel = computed(() => {
           <span class="sf-kv-item__value">{{ compactNumber(job.processingSummary.suspectedDuplicateCount) }}</span>
         </div>
         <div class="sf-kv-item">
-          <span class="sf-kv-item__label">开始 / 结束</span>
+          <span class="sf-kv-item__label">开始 / 完成</span>
           <span class="sf-kv-item__value">
             {{ formatDate(job.execution.startedAt, true) }} / {{ formatDate(job.execution.finishedAt, true) }}
           </span>
         </div>
         <div class="sf-kv-item">
-          <span class="sf-kv-item__label">创建 / 更新</span>
+          <span class="sf-kv-item__label">上传 / 更新</span>
           <span class="sf-kv-item__value">{{ formatDate(job.createdAt, true) }} / {{ formatDate(job.updatedAt, true) }}</span>
         </div>
       </div>
@@ -128,6 +128,11 @@ const executionLabel = computed(() => {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.detail-card :deep(.sf-kv-item__value) {
+  min-width: 0;
+  word-break: break-word;
 }
 
 @media (max-width: 960px) {

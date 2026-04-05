@@ -37,77 +37,79 @@ function rowClassName(args: { row: ImportJobResponse }) {
   <section class="sf-card sf-panel jobs-table">
     <div class="jobs-table__header">
       <div>
-        <h2 class="sf-section-title jobs-table__title">导入任务列表</h2>
-        <div class="sf-inline-note">选择任务后，右侧会展示处理摘要与执行状态。</div>
+        <h2 class="sf-section-title jobs-table__title">导入记录</h2>
+        <div class="sf-inline-note">选中一条记录后，可在右侧查看处理进度和结果。</div>
       </div>
-      <el-button plain :icon="RefreshRight" @click="emit('refresh')">刷新列表</el-button>
+      <el-button plain :icon="RefreshRight" @click="emit('refresh')">刷新</el-button>
     </div>
 
     <el-alert v-if="error" type="error" :closable="false" :title="error" show-icon />
 
     <div v-if="!loading && jobs.length === 0" class="sf-data-empty">
-      还没有导入任务，先上传一份账单文件建立任务记录。
+      还没有导入记录，上传账单后会在这里显示处理结果。
     </div>
 
     <template v-else>
-      <el-table
-        :data="jobs"
-        :loading="loading"
-        stripe
-        class="jobs-table__table"
-        :row-class-name="rowClassName"
-        @row-click="emit('select', $event.id)"
-      >
-        <el-table-column label="任务编号" min-width="108">
-          <template #default="{ row }">
-            <span class="sf-code-chip">JOB-{{ row.id }}</span>
-          </template>
-        </el-table-column>
+      <div class="jobs-table__table-wrap">
+        <el-table
+          :data="jobs"
+          :loading="loading"
+          stripe
+          class="jobs-table__table"
+          :row-class-name="rowClassName"
+          @row-click="emit('select', $event.id)"
+        >
+          <el-table-column label="导入批次" min-width="110">
+            <template #default="{ row }">
+              第 {{ row.id }} 批
+            </template>
+          </el-table-column>
 
-        <el-table-column label="来源" min-width="120">
-          <template #default="{ row }">
-            {{ importSourceLabel(row.sourceType) }}
-          </template>
-        </el-table-column>
+          <el-table-column label="来源" min-width="120">
+            <template #default="{ row }">
+              {{ importSourceLabel(row.sourceType) }}
+            </template>
+          </el-table-column>
 
-        <el-table-column label="状态" min-width="120">
-          <template #default="{ row }">
-            <StatusTag mode="import-status" :value="row.status" />
-          </template>
-        </el-table-column>
+          <el-table-column label="状态" min-width="120">
+            <template #default="{ row }">
+              <StatusTag mode="import-status" :value="row.status" />
+            </template>
+          </el-table-column>
 
-        <el-table-column label="处理进度" min-width="180">
-          <template #default="{ row }">
-            {{ compactNumber(row.processingSummary.processedCount) }} /
-            {{ compactNumber(row.processingSummary.totalCount) }}
-          </template>
-        </el-table-column>
+          <el-table-column label="处理进度" min-width="180">
+            <template #default="{ row }">
+              {{ compactNumber(row.processingSummary.processedCount) }} /
+              {{ compactNumber(row.processingSummary.totalCount) }}
+            </template>
+          </el-table-column>
 
-        <el-table-column label="成功 / 失败" min-width="150">
-          <template #default="{ row }">
-            {{ compactNumber(row.processingSummary.successCount) }} /
-            {{ compactNumber(row.processingSummary.failedCount) }}
-          </template>
-        </el-table-column>
+          <el-table-column label="成功 / 失败" min-width="150">
+            <template #default="{ row }">
+              {{ compactNumber(row.processingSummary.successCount) }} /
+              {{ compactNumber(row.processingSummary.failedCount) }}
+            </template>
+          </el-table-column>
 
-        <el-table-column label="疑似重复" min-width="116">
-          <template #default="{ row }">
-            {{ compactNumber(row.processingSummary.suspectedDuplicateCount) }}
-          </template>
-        </el-table-column>
+          <el-table-column label="重复提醒" min-width="116">
+            <template #default="{ row }">
+              {{ compactNumber(row.processingSummary.suspectedDuplicateCount) }}
+            </template>
+          </el-table-column>
 
-        <el-table-column label="更新时间" min-width="164">
-          <template #default="{ row }">
-            {{ formatDate(row.updatedAt, true) }}
-          </template>
-        </el-table-column>
+          <el-table-column label="最近更新" min-width="164">
+            <template #default="{ row }">
+              {{ formatDate(row.updatedAt, true) }}
+            </template>
+          </el-table-column>
 
-        <el-table-column label="操作" width="120" fixed="right">
-          <template #default="{ row }">
-            <el-button link type="primary" @click.stop="emit('select', row.id)">查看详情</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+          <el-table-column label="操作" width="120" fixed="right">
+            <template #default="{ row }">
+              <el-button link type="primary" @click.stop="emit('select', row.id)">查看详情</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
 
       <div class="jobs-table__pagination">
         <el-pagination
@@ -146,9 +148,18 @@ function rowClassName(args: { row: ImportJobResponse }) {
   width: 100%;
 }
 
+.jobs-table__table-wrap {
+  overflow-x: auto;
+}
+
+.jobs-table__table-wrap :deep(.el-table) {
+  min-width: 980px;
+}
+
 .jobs-table__pagination {
   display: flex;
   justify-content: flex-end;
+  overflow-x: auto;
 }
 
 .jobs-table :deep(.jobs-table__row) {
