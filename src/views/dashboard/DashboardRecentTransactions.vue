@@ -20,75 +20,73 @@ defineEmits<{
       <div class="sf-section-title">近期记录</div>
     </div>
 
-    <div v-if="!transactions?.items.length" class="sf-data-empty">
+    <div v-if="transactions?.items.length" class="dashboard-recent__table-shell">
+      <el-table class="dashboard-recent__table" :data="transactions.items" v-loading="loading">
+        <el-table-column label="日期" min-width="120">
+          <template #default="{ row }">
+            {{ formatDate(row.transactionDate) }}
+          </template>
+        </el-table-column>
+
+        <el-table-column label="商户 / 摘要" min-width="220">
+          <template #default="{ row }">
+            <div class="dashboard-recent__merchant">{{ row.merchantName || '未知商户' }}</div>
+            <div class="sf-inline-note">{{ row.summary || '无摘要' }}</div>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="方向" min-width="90">
+          <template #default="{ row }">
+            {{ directionLabel(row.direction) }}
+          </template>
+        </el-table-column>
+
+        <el-table-column label="金额" min-width="120" align="right">
+          <template #default="{ row }">
+            <span :class="row.direction === 'INCOME' ? 'sf-money-positive' : 'sf-money-negative'">
+              {{ formatMoney(row.amount) }}
+            </span>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="分类" min-width="130">
+          <template #default="{ row }">
+            {{ displayCategory(row.finalCategory) }}
+          </template>
+        </el-table-column>
+
+        <el-table-column label="分类方式" min-width="110">
+          <template #default="{ row }">
+            <StatusTag mode="source" :value="row.categorySource" />
+          </template>
+        </el-table-column>
+
+        <el-table-column label="提醒" min-width="100">
+          <template #default="{ row }">
+            <StatusTag mode="duplicate" :value="row.suspectedDuplicate ? 'YES' : 'NO'" />
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+
+    <div v-else class="sf-data-empty">
       当前筛选范围内没有流水记录，请调整时间窗口或关键词重试。
     </div>
 
-    <template v-else>
-      <div class="dashboard-recent__table-shell">
-        <el-table class="dashboard-recent__table" :data="transactions.items" v-loading="loading">
-          <el-table-column label="日期" min-width="120">
-            <template #default="{ row }">
-              {{ formatDate(row.transactionDate) }}
-            </template>
-          </el-table-column>
-
-          <el-table-column label="商户 / 摘要" min-width="220">
-            <template #default="{ row }">
-              <div class="dashboard-recent__merchant">{{ row.merchantName || '未知商户' }}</div>
-              <div class="sf-inline-note">{{ row.summary || '无摘要' }}</div>
-            </template>
-          </el-table-column>
-
-          <el-table-column label="方向" min-width="90">
-            <template #default="{ row }">
-              {{ directionLabel(row.direction) }}
-            </template>
-          </el-table-column>
-
-          <el-table-column label="金额" min-width="120" align="right">
-            <template #default="{ row }">
-              <span :class="row.direction === 'INCOME' ? 'sf-money-positive' : 'sf-money-negative'">
-                {{ formatMoney(row.amount) }}
-              </span>
-            </template>
-          </el-table-column>
-
-          <el-table-column label="分类" min-width="130">
-            <template #default="{ row }">
-              {{ displayCategory(row.finalCategory) }}
-            </template>
-          </el-table-column>
-
-          <el-table-column label="分类方式" min-width="110">
-            <template #default="{ row }">
-              <StatusTag mode="source" :value="row.categorySource" />
-            </template>
-          </el-table-column>
-
-          <el-table-column label="提醒" min-width="100">
-            <template #default="{ row }">
-              <StatusTag mode="duplicate" :value="row.suspectedDuplicate ? 'YES' : 'NO'" />
-            </template>
-          </el-table-column>
-        </el-table>
+    <div v-if="transactions" class="dashboard-recent__footer">
+      <div class="dashboard-recent__pagination-shell">
+        <el-pagination
+          background
+          layout="total, sizes, prev, pager, next"
+          :current-page="transactions.page + 1"
+          :page-size="transactions.size"
+          :page-sizes="[5, 10, 20]"
+          :total="transactions.total"
+          @current-change="$emit('pageChange', $event)"
+          @size-change="$emit('sizeChange', $event)"
+        />
       </div>
-
-      <div class="dashboard-recent__footer">
-        <div class="dashboard-recent__pagination-shell">
-          <el-pagination
-            background
-            layout="total, sizes, prev, pager, next"
-            :current-page="transactions.page"
-            :page-size="transactions.size"
-            :page-sizes="[5, 10, 20]"
-            :total="transactions.total"
-            @current-change="$emit('pageChange', $event)"
-            @size-change="$emit('sizeChange', $event)"
-          />
-        </div>
-      </div>
-    </template>
+    </div>
   </section>
 </template>
 

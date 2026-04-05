@@ -107,7 +107,10 @@ async function loadDashboard(query: DashboardQuery) {
   errorMessage.value = ''
 
   try {
-    const response = await getDashboardOverview(query)
+    const response = await getDashboardOverview({
+      ...query,
+      page: Math.max(query.page - 1, 0),
+    })
     if (requestId !== activeRequestId) {
       return
     }
