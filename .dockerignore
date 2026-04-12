@@ -1,0 +1,9 @@
+.git
+.idea
+.vscode
+.worktrees
+node_modules
+dist
+*.log
+.env.local
+.env.*.local
